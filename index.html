@@ -1101,7 +1101,7 @@
                 <p class="text-gray-600 text-lg max-w-3xl mx-auto">Our commitment to excellence is validated by certifications and quality standards that guarantee the highest level of product integrity and safety.</p>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 justify-items-center max-w-6xl mx-auto">
                 <div class="surface-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center animate-on-scroll">
                     <div class="w-16 h-16 bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-certificate text-white text-2xl"></i>
@@ -1119,14 +1119,6 @@
                 </div>
                 
                 <div class="surface-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center animate-on-scroll">
-                    <div class="w-16 h-16 bg-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-shield-alt text-white text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-800 mb-2">HACCP</h3>
-                    <p class="text-sm text-gray-600">Food Safety</p>
-                </div>
-                
-                <div class="surface-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center animate-on-scroll">
                     <div class="w-16 h-16 bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-globe text-white text-2xl"></i>
                     </div>
@@ -1140,14 +1132,6 @@
                     </div>
                     <h3 class="font-bold text-gray-800 mb-2">GMP</h3>
                     <p class="text-sm text-gray-600">Good Manufacturing</p>
-                </div>
-                
-                <div class="surface-card p-6 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center animate-on-scroll">
-                    <div class="w-16 h-16 bg-green-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-check-circle text-white text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-800 mb-2">FSSAI</h3>
-                    <p class="text-sm text-gray-600">Food Safety</p>
                 </div>
             </div>
             
@@ -1182,22 +1166,22 @@
                 <p class="text-green-100 text-lg">Our numbers speak for themselves</p>
             </div>
             <div class="flex flex-wrap justify-around text-center">
-                <div class="w-1/2 md:w-1/4 mb-12 stats-counter">
-                    <div class="text-5xl md:text-6xl font-bold mb-4 text-white">5000+</div>
+                <div class="w-1/2 md:w-1/4 mb-12 stats-counter animate-on-scroll">
+                    <div class="text-5xl md:text-6xl font-bold mb-4 text-white">10000+</div>
                     <div class="text-green-200 font-medium">Tons Exported</div>
                     <div class="w-16 h-1 bg-green-300 mx-auto mt-4 rounded-full"></div>
                 </div>
-                <div class="w-1/2 md:w-1/4 mb-12 stats-counter">
+                <div class="w-1/2 md:w-1/4 mb-12 stats-counter animate-on-scroll">
                     <div class="text-5xl md:text-6xl font-bold mb-4 text-white">15+</div>
-                    <div class="text-green-200 font-medium">Countries Served</div>
+                    <div class="text-green-200 font-medium">States Served</div>
                     <div class="w-16 h-1 bg-green-300 mx-auto mt-4 rounded-full"></div>
                 </div>
-                <div class="w-1/2 md:w-1/4 mb-12 stats-counter">
+                <div class="w-1/2 md:w-1/4 mb-12 stats-counter animate-on-scroll">
                     <div class="text-5xl md:text-6xl font-bold mb-4 text-white">100%</div>
                     <div class="text-green-200 font-medium">Organic Certified</div>
                     <div class="w-16 h-1 bg-green-300 mx-auto mt-4 rounded-full"></div>
                 </div>
-                <div class="w-1/2 md:w-1/4 mb-12 stats-counter">
+                <div class="w-1/2 md:w-1/4 mb-12">
                     <div class="text-5xl md:text-6xl font-bold mb-4 text-white">24/7</div>
                     <div class="text-green-200 font-medium">Buyer Support</div>
                     <div class="w-16 h-1 bg-green-300 mx-auto mt-4 rounded-full"></div>
@@ -2070,17 +2054,30 @@
             const counters = document.querySelectorAll('.stats-counter');
             counters.forEach((counter, index) => {
                 setTimeout(() => {
-                    const target = parseInt(counter.querySelector('div').textContent.replace(/[^\d]/g, ''));
+                    const valueNode = counter.querySelector('div');
+                    let rawValue = valueNode.textContent.trim();
+                    let suffix = '';
+                    if (rawValue.endsWith('/7')) {
+                        suffix = '/7';
+                        rawValue = rawValue.slice(0, -2);
+                    } else if (rawValue.endsWith('%')) {
+                        suffix = '%';
+                        rawValue = rawValue.slice(0, -1);
+                    } else if (rawValue.endsWith('+')) {
+                        suffix = '+';
+                        rawValue = rawValue.slice(0, -1);
+                    }
+                    const target = parseInt(rawValue.replace(/[^\d]/g, ''), 10);
                     if (!isNaN(target)) {
                         let current = 0;
                         const increment = target / 50;
                         const timer = setInterval(() => {
                             current += increment;
                             if (current >= target) {
-                                counter.querySelector('div').textContent = target + (target === 24 ? '/7' : target === 100 ? '%' : '+');
+                                valueNode.textContent = target + suffix;
                                 clearInterval(timer);
                             } else {
-                                counter.querySelector('div').textContent = Math.floor(current) + (target === 24 ? '/7' : target === 100 ? '%' : '+');
+                                valueNode.textContent = Math.floor(current) + suffix;
                             }
                         }, 50);
                     }
